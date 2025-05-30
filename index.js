@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 // Get __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -13,18 +14,27 @@ const app = express();
 dotenv.config();
 
 // Middleware
-app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
+
+app.use(cors({
+  origin: 'http://localhost:5173', // your frontend URL
+  credentials: true,              // <-- allow cookies to be sent
+}));
+
 
 // Serve static files (optional - usually handled by Vite)
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 
 // API Routes
 import userRoutes from './routes/user.js';
-// You can add more APIs like companyRoutes, driverRoutes, etc.
+import authRoutes from "./routes/auth.js"
 
-app.use('/api/user', userRoutes);
+
+app.use('/api/user', userRoutes); // handling user login here
+app.use('/api/auth', authRoutes); // logined user ke jwt me se username ko frontend me show kar rahe h
 
 
 // Start server

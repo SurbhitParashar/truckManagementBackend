@@ -5,20 +5,19 @@ import { setUser } from '../service/auth.js'
 export async function handleUserLogin(req, res) {
   const { username, password } = req.body;
 
-  const isValid = await UserDB.validateUseronLogin(username, password);
-
-  console.log(username, password)
-  console.log(isValid)
+  // Validate credentials and fetch user record
+  const user = await UserDB.getUserByUsername(username);
+  const isValid = user && await UserDB.validateUseronLogin(username, password);
 
   if (isValid) {
-    const token = setUser({ username });
+    // Pass full user object including id
+    const token = setUser({ id: user.id, username: user.username });
+
     res.cookie("uid", token, {
       httpOnly: true,
       sameSite: "Lax",
-      secure: false // for localhost
-    })
-
-    // console.log(token)
+      secure: false, // for localhost
+    });
 
     return res.status(200).json({ success: true, message: 'Login successful' });
   } else {

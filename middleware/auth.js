@@ -7,6 +7,7 @@ export function authenticateToken(req, res, next) {
     if (!token) return res.status(401).json({ message: "Token missing" });
 
     const user = verifyToken(token);
+    console.log('👤 Decoded User:', user);
     req.user = user;
     next();
   } catch (err) {

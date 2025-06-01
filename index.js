@@ -31,11 +31,11 @@ app.use(express.static(path.join(__dirname, '../frontend/public')));
 // API Routes
 import userRoutes from './routes/user.js';
 import authRoutes from "./routes/auth.js"
-
+import companyRoutes from "./routes/addCompany.js"
 
 app.use('/api/user', userRoutes); // handling user login here
 app.use('/api/auth', authRoutes); // logined user ke jwt me se username ko frontend me show kar rahe h
-
+app.use('/api/addcompany', companyRoutes) // add company wala route
 
 // Start server
 const PORT = process.env.PORT || 5000;

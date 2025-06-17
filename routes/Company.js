@@ -3,6 +3,7 @@ import { authenticateToken } from "../middleware/auth.js"
 import * as CompanyDB from "../db/addCompanyQueries.js"
 import pool from "../db/index.js"
 const router = express.Router()
+import { selectCompany } from "../controllers/companyController.js"
 
 router
   .post('/addCompany', authenticateToken, async (req, res) => {
@@ -23,7 +24,7 @@ router
   try {
     const result = await pool.query(`
       SELECT 
-        id,
+        company_id,
         companyname,
         createdBy_username,
         Status,
@@ -37,6 +38,8 @@ router
     res.status(500).json({ message: 'Error fetching companies' });
   }
 });
+
+router.post('/select', authenticateToken, selectCompany);
 
 
 

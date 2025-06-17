@@ -3,11 +3,11 @@ import {verifyToken} from "../service/auth.js"
 export function authenticateToken(req, res, next) {
   try {
     const token = req.cookies.uid;
-    console.log(token)
+    // console.log(token)
     if (!token) return res.status(401).json({ message: "Token missing" });
 
     const user = verifyToken(token);
-    console.log('👤 Decoded User:', user);
+   
     req.user = user;
     next();
   } catch (err) {

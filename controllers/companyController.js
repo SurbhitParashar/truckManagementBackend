@@ -1,15 +1,15 @@
-import { setUser} from "../service/auth.js";
+import { setCompanyToken} from "../service/auth.js";
 
 // This will create a JWT with selected company info
 export function selectCompany(req, res) {
-    // console.log(req.body)
-    const { companyId, companyName } = req.body;
+    console.log(req.body)
+    const { company_id, companyName } = req.body;
 
-    if (!companyId || !companyName) {
+    if (!company_id || !companyName) {
         return res.status(400).json({ message: "companyId and companyName are required" });
     }
 
-    const token = setUser({ companyId, companyName });
+    const token = setCompanyToken({ company_id, companyName });
 
     res.cookie("company_jwt", token, {
         httpOnly: true,

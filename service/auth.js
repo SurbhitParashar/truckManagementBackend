@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export function setUser(user){
     return jwt.sign(
@@ -8,6 +10,13 @@ export function setUser(user){
     );
 }
 
+export function setCompanyToken(company) {
+    return jwt.sign(
+        { company_id: company.company_id, companyName: company.companyName },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+    );
+}
 
 
 export function verifyToken(token){

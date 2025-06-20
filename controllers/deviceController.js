@@ -1,5 +1,6 @@
 import { createDevice } from "../db/addDeviceQueries.js";
 import { verifyToken } from "../service/auth.js";
+import { getDevicesByCompanyId } from "../db/DeviceQueries.js";
 
 export async function addDevice(req, res) {
   try {
@@ -25,3 +26,24 @@ export async function addDevice(req, res) {
     res.status(500).json({ message: "Failed to add device" });
   }
 }
+
+
+export async function getDevicesForCompany(req, res) {
+  try {
+    const companyToken = req.cookies.company_jwt;
+    // console.log(companyToken)
+
+    if (!companyToken) {
+      return res.status(401).json({ message: "Company token missing" });
+    }
+
+    const company = verifyToken(companyToken);
+    const devices = await getDevicesByCompanyId(company.company_id);
+    // console.log("Company devices:", devices);
+    res.status(200).json(devices);
+  } catch (err) {
+    console.error("Error fetching company devices:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+

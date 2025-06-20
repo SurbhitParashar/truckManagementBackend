@@ -2,7 +2,7 @@ import { setCompanyToken} from "../service/auth.js";
 
 // This will create a JWT with selected company info
 export function selectCompany(req, res) {
-    console.log(req.body)
+    // console.log(req.body)
     const { company_id, companyName } = req.body;
 
     if (!company_id || !companyName) {

@@ -8,7 +8,7 @@ export async function addDevice(req, res) {
 
     const userToken = req.cookies.uid;
     const companyToken = req.cookies.company_jwt;
-    console.log(userToken,companyToken)
+    // console.log(userToken,companyToken)
 
     if (!userToken || !companyToken) {
       return res.status(403).json({ message: "Missing authentication cookies" });
@@ -16,7 +16,7 @@ export async function addDevice(req, res) {
 
     const user = verifyToken(userToken);         // id + username
     const company = verifyToken(companyToken);   // companyId + companyName
-    console.log("user",user, "company",company);
+    // console.log("user",user, "company",company);
 
     const newDevice = await createDevice(device, company.company_id, user.username);
 

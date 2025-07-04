@@ -16,7 +16,7 @@ export async function addVehicle(req, res) {
         const vehicleData = {
             ...req.body,
 
-            added_by_user_id: user.user_id,
+            added_by_user_id: user.id,
             added_by_username: user.username,
             addedby_companyid: company.company_id,
             added_by_company_name: company.companyName

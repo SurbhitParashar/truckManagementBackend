@@ -34,12 +34,17 @@ import authRoutes from "./routes/auth.js"
 import companyRoutes from "./routes/Company.js"
 import deviceRoutes from "./routes/device.js"
 import vehicleRoute from "./routes/vehicle.js"
+import terminalRoute from "./routes/terminal.js"
+import driverRoutes from './routes/driver.js';
+
 
 app.use('/api/user', userRoutes); // handling user login here
 app.use('/api/auth', authRoutes); // logined user ke jwt me se username ko frontend me show kar rahe h
 app.use('/api/company', companyRoutes) // add company wala route
 app.use('/api/device', deviceRoutes); // this is for adding the devices
 app.use('/api/vehicle', vehicleRoute);
+app.use('/api/terminal', terminalRoute);
+app.use('/api/driver', driverRoutes);
 
 
 // Start server

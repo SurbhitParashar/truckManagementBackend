@@ -32,6 +32,7 @@ export async function addVehicle(req, res) {
 
 
 
+
 export async function getVehicles(req, res) {
   try {
     const companyToken = req.cookies.company_jwt;

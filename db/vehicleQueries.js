@@ -9,7 +9,7 @@ export async function insertVehicle(vehicleData) {
     vin,
     fuel,
     eld,
-    device,
+    device_id,
     licensePlate,
     country,
     plateNumber,
@@ -28,7 +28,7 @@ export async function insertVehicle(vehicleData) {
 
   const query = `
     INSERT INTO vehicles (
-      vehicle_unit_number, make, model, year, vin, fuel, eld, device,
+      vehicle_unit_number, make, model, year, vin, fuel, eld, device_id,
       license_plate, country, plate_number,
       engine_hours_offset, offset_odometer,
       harsh_breaking, harsh_acceleration, harsh_turn,
@@ -49,7 +49,7 @@ export async function insertVehicle(vehicleData) {
   `;
 
   const values = [
-    vehicleUnitNumber, make, model, year, vin, fuel, eld, device,
+    vehicleUnitNumber, make, model, year, vin, fuel, eld, device_id,
     licensePlate, country, plateNumber,
     engineHoursOffset, offsetOdometer,
     harshBreaking, harshAcceleration, harshTurn,
@@ -64,9 +64,15 @@ export async function insertVehicle(vehicleData) {
 
 
 export async function getVehiclesByCompany(companyId) {
-  const query = `SELECT * FROM vehicles WHERE addedby_companyid = $1`;
+  const query = `
+    SELECT * FROM vehicles
+    WHERE addedby_companyid = $1
+    ORDER BY id DESC;
+  `;
+
   const values = [companyId];
 
   const result = await pool.query(query, values);
   return result.rows;
 }
+

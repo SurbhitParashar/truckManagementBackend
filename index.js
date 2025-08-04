@@ -28,7 +28,7 @@ app.use(cors({
 // Serve static files (optional - usually handled by Vite)
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 
-// API Routes
+// API Routes for website
 import userRoutes from './routes/user.js';
 import authRoutes from "./routes/auth.js"
 import companyRoutes from "./routes/Company.js"
@@ -37,7 +37,11 @@ import vehicleRoute from "./routes/vehicle.js"
 import terminalRoute from "./routes/terminal.js"
 import driverRoutes from './routes/driver.js';
 
+// API Routes for app
+import appauthRoutes from "./routes/app/auth.js"
 
+
+// API Routes calling for website
 app.use('/api/user', userRoutes); // handling user login here
 app.use('/api/auth', authRoutes); // logined user ke jwt me se username ko frontend me show kar rahe h
 app.use('/api/company', companyRoutes) // add company wala route
@@ -45,6 +49,9 @@ app.use('/api/device', deviceRoutes); // this is for adding the devices
 app.use('/api/vehicle', vehicleRoute);
 app.use('/api/terminal', terminalRoute);
 app.use('/api/driver', driverRoutes);
+
+// API Routes calling for app
+app.use('/api/auth', appauthRoutes);
 
 
 // Start server

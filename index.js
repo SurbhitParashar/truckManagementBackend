@@ -20,7 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 
 app.use(cors({
-  origin: 'http://localhost:5173', // your frontend URL
+  // origin: 'http://localhost:5173', // your frontend URL
+  origin:"*",
   credentials: true,              // <-- allow cookies to be sent
 }));
 
@@ -38,8 +39,8 @@ import terminalRoute from "./routes/terminal.js"
 import driverRoutes from './routes/driver.js';
 
 // API Routes for app
-import appauthRoutes from "./routes/app/auth.js"
-
+import appauthRoutes from "./routes/app/auth.js";
+import logsRouter from "./routes/app/logs.js";
 
 // API Routes calling for website
 app.use('/api/user', userRoutes); // handling user login here
@@ -51,11 +52,16 @@ app.use('/api/terminal', terminalRoute);
 app.use('/api/driver', driverRoutes);
 
 // API Routes calling for app
-app.use('/api/auth', appauthRoutes);
+app.use('/api/app/auth', appauthRoutes);
+app.use('/api/app/logs',logsRouter);
 
+app.get('/health', (_req, res) => res.json({ ok: true }));
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+// app.listen(PORT, () => {
+//   console.log(`🚀 Server running at http://localhost:${PORT}`);
+// });
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
 });

@@ -5,6 +5,7 @@ import { setUser } from '../../service/auth.js';
 
 export async function login(req, res) {
   const { username, password } = req.body;
+  
 
   try {
     // 1) Fetch driver

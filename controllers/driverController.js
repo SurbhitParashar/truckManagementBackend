@@ -1,6 +1,8 @@
 import { verifyToken } from '../service/auth.js';
 import { insertDriver, getAllDrivers } from '../db/driverQueries.js';
 import bcrypt from 'bcrypt';
+import { getDriverByUsername} from "../service/driverService.js";
+
 
 export async function addDriver(req, res) {
   try {
@@ -55,3 +57,17 @@ export async function getDrivers(req, res) {
   }
 }
 
+
+export async function fetchDriverByUsername(req, res) {
+  try {
+    const { username } = req.params;
+    const driver = await getDriverByUsername(username);
+    if (!driver) {
+      return res.status(404).json({ error: "Driver not found" });
+    }
+    res.json(driver);
+  } catch (err) {
+    console.error("Fetch driver error:", err);
+    res.status(500).json({ error: "Server error while fetching driver" });
+  }
+}

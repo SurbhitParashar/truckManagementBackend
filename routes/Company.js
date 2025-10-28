@@ -42,6 +42,27 @@ router
 router.post('/select', authenticateToken, selectCompany);
 
 
+// GET /api/company/:id
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const company = await CompanyDB.findOne({ where: { company_id: id } });
+//     if (!company) return res.status(404).json({ message: "Company not found" });
+
+//     res.json({ company });
+//   } catch (err) {
+//     console.error("Error fetching company:", err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+router.get('/api/company/:id', async (req, res) => {
+  const { id } = req.params;
+  const company = await db.query('SELECT * FROM company WHERE company_id = $1', [id]);
+  res.json(company.rows[0]);
+});
+
+
 
 
 export default router;

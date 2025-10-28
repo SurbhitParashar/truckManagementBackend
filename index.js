@@ -38,9 +38,12 @@ import vehicleRoute from "./routes/vehicle.js"
 import terminalRoute from "./routes/terminal.js"
 import driverRoutes from './routes/driver.js';
 
+import logsRouter from './routes/logs.js';
+import getlogRoutes from "./routes/logRoutes.js";
+
 // API Routes for app
 import appauthRoutes from "./routes/app/auth.js";
-import logsRouter from "./routes/app/logs.js";
+import logsappRouter from "./routes/app/logs.js";
 
 // API Routes calling for website
 app.use('/api/user', userRoutes); // handling user login here
@@ -51,9 +54,16 @@ app.use('/api/vehicle', vehicleRoute);
 app.use('/api/terminal', terminalRoute);
 app.use('/api/driver', driverRoutes);
 
+// for fetching logs summary for portal (all logs)
+app.use('/api/driver', logsRouter);
+app.use("/api/getlogs", getlogRoutes);
+
+
 // API Routes calling for app
 app.use('/api/app/auth', appauthRoutes);
-app.use('/api/app/logs',logsRouter);
+app.use('/api/app/logs',logsappRouter);
+
+
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
 

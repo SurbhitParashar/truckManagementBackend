@@ -68,7 +68,8 @@ export async function upsertLogsForDriver(driverUsername, events) {
             typeof ev.odometer === 'number' ? ev.odometer : null,
             typeof ev.engineHours === 'number' ? ev.engineHours : null,
             ev.eldIdentifier || null,
-            clientEventId
+            clientEventId,
+            ev.origin || 'automatic'   // <= NEW
           ]
         );
         savedIds.push(clientEventId);
@@ -89,7 +90,8 @@ export async function upsertLogsForDriver(driverUsername, events) {
         location: r.location,
         odometer: r.odometer,
         engineHours: r.engine_hours,
-        eldIdentifier: r.eld_identifier
+        eldIdentifier: r.eld_identifier,
+        origin: r.origin || 'automatic'
       }));
 
       const samples = computeHourlySamplesFromEvents(logId, mappedEvents, logDate);
@@ -252,7 +254,7 @@ export async function fetchLogsForDriver(driverUsername, days = 7) {
           l.id as log_id, l.log_date, l.metadata, l.certified, 
           l.certified_at, l.certified_by, l.signature,
           le.id as event_id, le.status, le.event_time, le.location, 
-          le.odometer, le.engine_hours, le.eld_identifier, le.client_event_id
+          le.odometer, le.engine_hours, le.eld_identifier, le.client_event_id, le.origin
        FROM logs l
        LEFT JOIN log_events le ON le.log_id = l.id
        WHERE l.driver_id = $1 AND l.log_date >= $2
@@ -287,7 +289,8 @@ export async function fetchLogsForDriver(driverUsername, days = 7) {
           odometer: r.odometer,
           engineHours: r.engine_hours,
           eldIdentifier: r.eld_identifier,
-          clientEventId: r.client_event_id
+          clientEventId: r.client_event_id,
+          origin: r.origin || 'automatic'
         });
       }
     }
@@ -438,7 +441,8 @@ function computeHourlySamplesFromEvents(logId, events, logDate) {
           event_id: curr.id || null,
           odometer: curr.odometer || null,
           engine_hours: curr.engineHours || curr.engine_hours || null,
-          location: curr.location || null
+          location: curr.location || null,
+          origin: curr.origin || 'automatic'
         });
       }
 
@@ -485,8 +489,8 @@ async function upsertHourlySamplesForLog(client, logId, samples) {
     // Upsert by unique (log_id, hour)
     await client.query(
       `INSERT INTO daily_hourly_samples
-        (log_id, hour, start_time, end_time, status, event_id, odometer, engine_hours, location)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+        (log_id, hour, start_time, end_time, status, event_id, odometer, engine_hours, location, origin)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
        ON CONFLICT (log_id, hour) DO UPDATE SET
          start_time = EXCLUDED.start_time,
          end_time = EXCLUDED.end_time,
@@ -494,8 +498,9 @@ async function upsertHourlySamplesForLog(client, logId, samples) {
          event_id = EXCLUDED.event_id,
          odometer = EXCLUDED.odometer,
          engine_hours = EXCLUDED.engine_hours,
-         location = EXCLUDED.location`,
-      [logId, s.hour, s.start_time, s.end_time, s.status, s.event_id, s.odometer, s.engine_hours, s.location]
+         location = EXCLUDED.location,
+         origin = EXCLUDED.origin`,
+      [logId, s.hour, s.start_time, s.end_time, s.status, s.event_id, s.odometer, s.engine_hours, s.location, s.origin || 'automatic']
     );
   }
 }
